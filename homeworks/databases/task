@@ -1,12 +1,221 @@
 1. Insert dump (my_items) to your local database.
-    Create additional table phones with fields:
-        id, phone_name, company_id, user_id
-    Create additional table phone_companies with fields:
-        id, name
-     Write select and save it to file to get users is developers.
-     Insert xiaomi, apple, samsung to companies.
-     Insert 3 phone (with any data) to phones.
-     Write select and save it to file to get phones where company_id=XIAOMI COMPANY ID.
-send file dump of your database and file with your select and insert queries.
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0,01 sec)
+
+mysql> CREATE DATABASE my_items;
+Query OK, 1 row affected (0,02 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| my_items           |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0,01 sec)
+
+mysql> quit;
+Bye
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ sudo chmod 0777 my_items.sql
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ sudo mysql -u root --password=130501 my_items < my_items.sql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ sudo mysql -u root -p
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| my_items           |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0,01 sec)
+
+# Create additional table phones with fields: id, phone_name, company_id, user_id
+
+mysql> SHOW TABLES;
++--------------------+
+| Tables_in_my_items |
++--------------------+
+| users              |
++--------------------+
+1 row in set (0,00 sec)
+
+mysql> SELECT * FROM users;
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+| id | first_name | last_name | about_me                                          | is_developer | email          |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+|  1 | Liubomyr   | Luzhnyi   | bla bla bla bla bla lb a bla bla bla bla bla bla  |            1 | test@email.com |
+|  3 | Vasyl      | Mykutko   | bla bla bla bla                                   |            1 | test@email.com |
+|  4 | Roman      | Bondar    | bla bla bla bla bla lb a bla bla bla bla bla bla1 |            1 | test@email.com |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+3 rows in set (0,00 sec)
+
+mysql> CREATE TABLE phones(id INT NOT NULL AUTO_INCREMENT, phone_name CHAR(255), company_id INT NOT NULL, user_id INT NOT NULL, PRIMARY KEY(id));
+Query OK, 0 rows affected (0,06 sec)
+
+mysql> SHOW COLUMNS FROM phones;
++------------+-----------+------+-----+---------+----------------+
+| Field      | Type      | Null | Key | Default | Extra          |
++------------+-----------+------+-----+---------+----------------+
+| id         | int       | NO   | PRI | NULL    | auto_increment |
+| phone_name | char(255) | YES  |     | NULL    |                |
+| company_id | int       | NO   |     | NULL    |                |
+| user_id    | int       | NO   |     | NULL    |                |
++------------+-----------+------+-----+---------+----------------+
+4 rows in set (0,01 sec)
+
+# Create additional table phone_companies with fields: id, name
+
+mysql> CREATE TABLE phone_companies(id INT NOT NULL AUTO_INCREMENT, name CHAR(255), PRIMARY KEY(id));
+Query OK, 0 rows affected (0,05 sec)
+
+mysql> SHOW COLUMNS FROM phone_companies;
++-------+-----------+------+-----+---------+----------------+
+| Field | Type      | Null | Key | Default | Extra          |
++-------+-----------+------+-----+---------+----------------+
+| id    | int       | NO   | PRI | NULL    | auto_increment |
+| name  | char(255) | YES  |     | NULL    |                |
++-------+-----------+------+-----+---------+----------------+
+2 rows in set (0,00 sec)
+
+# Write select and save it to file to get users is developers.
+
+mysql> SELECT * FROM users;
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+| id | first_name | last_name | about_me                                          | is_developer | email          |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+|  1 | Liubomyr   | Luzhnyi   | bla bla bla bla bla lb a bla bla bla bla bla bla  |            1 | test@email.com |
+|  3 | Vasyl      | Mykutko   | bla bla bla bla                                   |            1 | test@email.com |
+|  4 | Roman      | Bondar    | bla bla bla bla bla lb a bla bla bla bla bla bla1 |            1 | test@email.com |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+3 rows in set (0,00 sec)
+
+mysql> SELECT first_name FROM users;
++------------+
+| first_name |
++------------+
+| Liubomyr   |
+| Vasyl      |
+| Roman      |
++------------+
+3 rows in set (0,00 sec)
+
+mysql> SELECT * FROM users WHERE last_name LIKE "%o%";
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+| id | first_name | last_name | about_me                                          | is_developer | email          |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+|  3 | Vasyl      | Mykutko   | bla bla bla bla                                   |            1 | test@email.com |
+|  4 | Roman      | Bondar    | bla bla bla bla bla lb a bla bla bla bla bla bla1 |            1 | test@email.com |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+2 rows in set (0,00 sec)
+
+mysql> SELECT first_name FROM users WHERE is_developer=1;
++------------+
+| first_name |
++------------+
+| Liubomyr   |
+| Vasyl      |
+| Roman      |
++------------+
+3 rows in set (0,00 sec)
+
+# Insert xiaomi, apple, samsung to companies.
+
+mysql> INSERT INTO phone_companies(name) VALUES ("xiaomy"), ("apple"), ("samsung");
+Query OK, 3 rows affected (0,01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM phone_companies;
++----+---------+
+| id | name    |
++----+---------+
+|  1 | xiaomy  |
+|  2 | apple   |
+|  3 | samsung |
++----+---------+
+3 rows in set (0,00 sec)
+
+# Insert 3 phone (with any data) to phones.
+
+mysql> INSERT INTO phones(phone_name, company_id, user_id) VALUES ("XR", 2, 4), ("GalaxyA3", 3, 1), ("Readme10", 1, 3);
+Query OK, 3 rows affected (0,01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM phones;
++----+------------+------------+---------+
+| id | phone_name | company_id | user_id |
++----+------------+------------+---------+
+|  1 | XR         |          2 |       4 |
+|  2 | GalaxyA3   |          3 |       1 |
+|  3 | Readme10   |          1 |       3 |
++----+------------+------------+---------+
+3 rows in set (0,00 sec)
+
+# Write select and save it to file to get phones where company_id=XIAOMI COMPANY ID.
+
+mysql> SELECT phone_name FROM phones;
++------------+
+| phone_name |
++------------+
+| XR         |
+| GalaxyA3   |
+| Readme10   |
++------------+
+3 rows in set (0,00 sec)
+
+mysql> SELECT phone_name FROM phones WHERE ID>2;
++------------+
+| phone_name |
++------------+
+| Readme10   |
++------------+
+1 row in set (0,01 sec)
+
+mysql> SELECT * FROM phones WHERE ID>2;
++----+------------+------------+---------+
+| id | phone_name | company_id | user_id |
++----+------------+------------+---------+
+|  3 | Readme10   |          1 |       3 |
++----+------------+------------+---------+
+1 row in set (0,00 sec)
+
+mysql> SELECT * FROM phones WHERE company_id=1;
++----+------------+------------+---------+
+| id | phone_name | company_id | user_id |
++----+------------+------------+---------+
+|  3 | Readme10   |          1 |       3 |
++----+------------+------------+---------+
+1 row in set (0,00 sec)
+
+# send file dump of your database and file with your select and insert queries.
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ sudo mysqldump -u root --password=130501 my_items > my_items.sql
+[sudo] password for dariia:
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
 
 2.* Select all users which have phones.
+
+mysql> SELECT * FROM users WHERE id  IN (SELECT user_id FROM phones WHERE user_id>0);
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+| id | first_name | last_name | about_me                                          | is_developer | email          |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+|  4 | Roman      | Bondar    | bla bla bla bla bla lb a bla bla bla bla bla bla1 |            1 | test@email.com |
+|  1 | Liubomyr   | Luzhnyi   | bla bla bla bla bla lb a bla bla bla bla bla bla  |            1 | test@email.com |
+|  3 | Vasyl      | Mykutko   | bla bla bla bla                                   |            1 | test@email.com |
++----+------------+-----------+---------------------------------------------------+--------------+----------------+
+3 rows in set (0,00 sec)
