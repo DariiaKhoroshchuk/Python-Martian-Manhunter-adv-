@@ -9,6 +9,310 @@ Try to use such commands:
 - docker logs {id}/{name}
 Change the flask application to print your name and rebuild the image. Run the container again to verify the result.
 
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker build . -t flask-app
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+flask-app    latest    dbcd021bbed3   4 minutes ago   422MB
+ubuntu       20.04     7e0aa2d69a15   5 weeks ago     72.7MB
+ubuntu       latest    7e0aa2d69a15   5 weeks ago     72.7MB
+jenkins      2.60.3    cd14cecfdb3a   2 years ago     696MB
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker run -p 8000:8080 flask-app
+ * Serving Flask app '/opt/app.py' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.17.0.2:8080/ (Press CTRL+C to quit)
+172.17.0.1 - - [02/Jun/2021 12:19:50] "GET / HTTP/1.1" 200 -
+172.17.0.1 - - [02/Jun/2021 12:19:50] "GET /favicon.ico HTTP/1.1" 404 -
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker ps
+CONTAINER ID   IMAGE       COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+27b40fcce3c7   flask-app   "/bin/sh -c 'FLASK_A…"   5 minutes ago   Up 5 minutes   0.0.0.0:8000->8080/tcp, :::8000->8080/tcp   reverent_blackwell
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker stop 27
+27
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker  ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker run -d -p 8000:8080 flask-app
+ccb2f5d5a022fa33692754526e10484e5959eab1e420aa2ad7290280122afc3e
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker ps
+CONTAINER ID   IMAGE       COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+ccb2f5d5a022   flask-app   "/bin/sh -c 'FLASK_A…"   8 seconds ago   Up 7 seconds   0.0.0.0:8000->8080/tcp, :::8000->8080/tcp   crazy_brattain
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker attach c
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker stop c
+c
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker run -d -p 8000:8080 flask-app
+8c9187eee5a98df5a7edbd2c405e51b1921586554d3f653c55d4e1bcfe28ff7b
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker inspect 8c
+[
+    {
+        "Id": "8c9187eee5a98df5a7edbd2c405e51b1921586554d3f653c55d4e1bcfe28ff7b",
+        "Created": "2021-06-02T15:44:33.413925892Z",
+        "Path": "/bin/sh",
+        "Args": [
+            "-c",
+            "FLASK_APP=/opt/app.py flask run --host=0.0.0.0 --port=8080"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 14344,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2021-06-02T15:44:34.196389501Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:dbcd021bbed3b866c092dbced2eb07e6676a6cf49c5e0edcb329868cb8bf1dad",
+        "ResolvConfPath": "/var/lib/docker/containers/8c9187eee5a98df5a7edbd2c405e51b1921586554d3f653c55d4e1bcfe28ff7b/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/8c9187eee5a98df5a7edbd2c405e51b1921586554d3f653c55d4e1bcfe28ff7b/hostname",
+        "HostsPath": "/var/lib/docker/containers/8c9187eee5a98df5a7edbd2c405e51b1921586554d3f653c55d4e1bcfe28ff7b/hosts",
+        "LogPath": "/var/lib/docker/containers/8c9187eee5a98df5a7edbd2c405e51b1921586554d3f653c55d4e1bcfe28ff7b/8c9187eee5a98df5a7edbd2c405e51b1921586554d3f653c55d4e1bcfe28ff7b-json.log",
+        "Name": "/practical_goldwasser",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "8000"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "host",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "KernelMemory": 0,
+            "KernelMemoryTCP": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/d93c93f5b12405acc663ffb4dd23a54b03da4a4f0ae5d256486d667501416934-init/diff:/var/lib/docker/overlay2/1dff311c162a5d4cf441ef4c36325b6a9a217491aaaf366b9dc0dd85eac5ab86/diff:/var/lib/docker/overlay2/1e294f1de1984bf8414ab181f29e5a0cc502877c7d0d6427312b3afbb7283e3f/diff:/var/lib/docker/overlay2/a62aff16894e836295b1c64061dd13c2fb840afd918cd8a7931a925a0c11871d/diff:/var/lib/docker/overlay2/2600a2e6d333a71a32630b67a56c740baac39ef59d9d140cc966956d78cf51ea/diff:/var/lib/docker/overlay2/b3f87edcb90c0dc89d1fe56d51b0c853f40feb987a8dd0a42defcec27f14b995/diff:/var/lib/docker/overlay2/550831a64d5803715cdf11ca1df10452bc2b8b6c9d1467d017971af80f2a242a/diff",
+                "MergedDir": "/var/lib/docker/overlay2/d93c93f5b12405acc663ffb4dd23a54b03da4a4f0ae5d256486d667501416934/merged",
+                "UpperDir": "/var/lib/docker/overlay2/d93c93f5b12405acc663ffb4dd23a54b03da4a4f0ae5d256486d667501416934/diff",
+                "WorkDir": "/var/lib/docker/overlay2/d93c93f5b12405acc663ffb4dd23a54b03da4a4f0ae5d256486d667501416934/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "8c9187eee5a9",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": null,
+            "Image": "flask-app",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/bin/sh",
+                "-c",
+                "FLASK_APP=/opt/app.py flask run --host=0.0.0.0 --port=8080"
+            ],
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "377e23b068d668fd3a590eabf7d78caaa62516e015e4fed1d492dc6f3297caa8",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "8000"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "8000"
+                    }
+                ]
+            },
+            "SandboxKey": "/var/run/docker/netns/377e23b068d6",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "b6fb3bdd812c89fa0cf4bb3636f19271c8d98d224c8d11ee655e9f7a93554be4",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.2",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:02",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "287eb1c3413cac28f4605c97316a05421299289a276f6859f08cb1d196215f2e",
+                    "EndpointID": "b6fb3bdd812c89fa0cf4bb3636f19271c8d98d224c8d11ee655e9f7a93554be4",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker logs 8c
+ * Serving Flask app '/opt/app.py' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.17.0.2:8080/ (Press CTRL+C to quit)
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker build . -t flask-app1
+Sending build context to Docker daemon  17.41kB
+Step 1/5 : FROM ubuntu:20.04
+ ---> 7e0aa2d69a15
+Step 2/5 : RUN apt-get update && apt-get install -y python python3-pip
+ ---> Using cache
+ ---> 9fe8cda106b0
+Step 3/5 : RUN pip install flask
+ ---> Using cache
+ ---> 18f5001f5650
+Step 4/5 : COPY app.py /opt/
+ ---> 6df1199cf202
+Step 5/5 : ENTRYPOINT FLASK_APP=/opt/app.py flask run --host=0.0.0.0 --port=8080
+ ---> Running in d866f39b5da6
+Removing intermediate container d866f39b5da6
+ ---> 52680d44c3c6
+Successfully built 52680d44c3c6
+Successfully tagged flask-app1:latest
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+flask-app1   latest    52680d44c3c6   48 seconds ago   422MB
+flask-app    latest    dbcd021bbed3   5 hours ago      422MB
+ubuntu       20.04     7e0aa2d69a15   5 weeks ago      72.7MB
+ubuntu       latest    7e0aa2d69a15   5 weeks ago      72.7MB
+jenkins      2.60.3    cd14cecfdb3a   2 years ago      696MB
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker run -d 52
+e8a08c68a82bd8b73a2ef0347e94980c3b94a726d57b903123b9a5af0671493e
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
+e8a08c68a82b   52        "/bin/sh -c 'FLASK_A…"   48 seconds ago   Up 47 seconds             charming_shamir
+
 2*.
 • docker run -it --name my_story ubuntu
 • In the container, run echo "Your story" > story.txt
@@ -16,3 +320,27 @@ Change the flask application to print your name and rebuild the image. Run the c
 • In another terminal window, run docker run -it --name my_story_2 ubuntu
 • Using ls, check that there is no joke.txt file, because you are in another different container. Also,
 there is no cowsay command.
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker run -it --name my_story ubuntu
+root@3bcf506758a1:/# echo "Ah, Houston, we've had a problem." > story.txt
+root@3bcf506758a1:/# apt-get update && apt-get install cowsay
+root@3bcf506758a1:/# whereis cowsay
+cowsay: /usr/games/cowsay /usr/share/cowsay
+root@3bcf506758a1:/# cat story.txt | /usr/games/cowsay
+ ___________________________________
+< Ah, Houston, we've had a problem. >
+ -----------------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/docker$ docker run -it --name my_story_2 ubuntu
+root@78bdbca53502:/# ls
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@78bdbca53502:/# whereis cowsay
+cowsay:
+root@78bdbca53502:/# find joke.txt
+find: 'joke.txt': No such file or directory
+

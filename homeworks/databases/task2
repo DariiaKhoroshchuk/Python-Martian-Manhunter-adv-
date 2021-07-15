@@ -1,3 +1,321 @@
 1. Insert dump of shop.sql to your local database
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| my_items           |
+| mysql              |
+| performance_schema |
+| shop               |
+| sys                |
++--------------------+
+6 rows in set (0,04 sec)
+
+mysql> CREATE DATABASE shop_hw;
+Query OK, 1 row affected (0,03 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| my_items           |
+| mysql              |
+| performance_schema |
+| shop               |
+| shop_hw            |
+| sys                |
++--------------------+
+7 rows in set (0,00 sec)
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ sudo chmod 0777 shop.sql
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ ls -la
+total 36
+drwxrwxr-x 2 dariia dariia 4096 тра 25 19:27 .
+drwxrwxr-x 6 dariia dariia 4096 чер  2 14:04 ..
+-rwxrwxrwx 1 dariia dariia 3841 тра 25 19:08 my_items.sql
+-rwxrwxrwx 1 dariia dariia 6434 тра 24 21:52 shop.sql
+-rw-rw-r-- 1 dariia dariia 9171 тра 25 19:27 task
+-rw-rw-r-- 1 dariia dariia  186 тра 24 21:52 task2
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ sudo mysql -u root --password=130501 shop_hw < shop.sql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| my_items           |
+| mysql              |
+| performance_schema |
+| shop               |
+| shop_hw            |
+| sys                |
++--------------------+
+7 rows in set (0,03 sec)
+
+mysql> USE shop_hw;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SHOW TABLES;
++---------------------+
+| Tables_in_shop_hw   |
++---------------------+
+| categories          |
+| categories_products |
+| product_images      |
+| products            |
+| users               |
++---------------------+
+5 rows in set (0,01 sec)
+
 2. Modify table products add user_id as foreign key
+
+mysql> SHOW COLUMNS FROM products;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| price       | double       | NO   |     | NULL    |                |
+| old_price   | double       | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+7 rows in set (0,00 sec)
+
+mysql> ALTER TABLE products ADD COLUMN user_id INT;
+Query OK, 0 rows affected (0,08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SHOW COLUMNS FROM products;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| price       | double       | NO   |     | NULL    |                |
+| old_price   | double       | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | NULL    |                |
+| user_id     | int          | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+8 rows in set (0,01 sec)
+
+mysql> ALTER TABLE products ADD FOREIGN KEY (user_id) REFERENCES users(id);
+Query OK, 1 row affected (0,08 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> SHOW COLUMNS FROM products;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| price       | double       | NO   |     | NULL    |                |
+| old_price   | double       | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | NULL    |                |
+| user_id     | int          | YES  | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+8 rows in set (0,00 sec)
+
 3. Select users their products, collections and images and write this query to file.
+
+mysql> SHOW COLUMNS FROM users;
++------------+------------+------+-----+---------+----------------+
+| Field      | Type       | Null | Key | Default | Extra          |
++------------+------------+------+-----+---------+----------------+
+| id         | int        | NO   | PRI | NULL    | auto_increment |
+| first_name | char(50)   | NO   |     | NULL    |                |
+| last_name  | char(60)   | NO   |     | NULL    |                |
+| email      | char(50)   | NO   |     | NULL    |                |
+| is_admin   | tinyint(1) | YES  |     | 0       |                |
++------------+------------+------+-----+---------+----------------+
+5 rows in set (0,00 sec)
+
+mysql> INSERT INTO users (first_name, last_name, email) VALUES ("Dariia", "Khoroshchuk", "dariia@gmail.com");
+Query OK, 1 row affected (0,02 sec)
+
+mysql> SELECT * FROM users;
++----+------------+-------------+---------------------------+----------+
+| id | first_name | last_name   | email                     | is_admin |
++----+------------+-------------+---------------------------+----------+
+|  1 | Liubomyr   | Luzhnyi     | lubomur.luzhnuy@gmail.com |        1 |
+|  2 | Dariia     | Khoroshchuk | dariia@gmail.com          |        0 |
++----+------------+-------------+---------------------------+----------+
+2 rows in set (0,01 sec)
+
+mysql> UPDATE products SET user_id=1 WHERE id=1;
+Query OK, 1 row affected (0,02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM products;
++----+-------+----------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+| id | title | meta_title           | description                                     | price    | old_price | is_active | user_id |
++----+-------+----------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+|  1 | Rolex | Rolex | Watch | Shop | bla bla bla bla bla bla bla bla bla bla bla bla | 14000.25 |      NULL |         1 |       1 |
++----+-------+----------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+1 row in set (0,01 sec)
+
+mysql> SHOW COLUMNS FROM products;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| price       | double       | NO   |     | NULL    |                |
+| old_price   | double       | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | NULL    |                |
+| user_id     | int          | YES  | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+8 rows in set (0,01 sec)
+
+mysql> INSERT INTO products (title, meta_title, description, price, old_price, is_active, user_id) VALUES ("Casio", "Casio Standart | Watch | Shop", "bla bla bla bla bla bla bla bla bla bla bla bla", 2000.00, NULL, 1, 2);
+Query OK, 1 row affected (0,02 sec)
+
+mysql> SELECT * FROM products;
++----+-------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+| id | title | meta_title                    | description                                     | price    | old_price | is_active | user_id |
++----+-------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+|  1 | Rolex | Rolex | Watch | Shop          | bla bla bla bla bla bla bla bla bla bla bla bla | 14000.25 |      NULL |         1 |       1 |
+|  3 | Casio | Casio Standart | Watch | Shop | bla bla bla bla bla bla bla bla bla bla bla bla |     2000 |      NULL |         1 |       2 |
++----+-------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+2 rows in set (0,00 sec)
+
+mysql> INSERT INTO products (title, meta_title, description, price, old_price, is_active, user_id) VALUES ("Apple iPhone12 ", "Apple | Phone
+| Shop", "bla bla bla bla bla bla bla bla bla bla bla bla", 1000.00, NULL, 1, 2);
+Query OK, 1 row affected (0,01 sec)
+
+mysql> SELECT * FROM products;
++----+-----------------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+| id | title           | meta_title                    | description                                     | price    | old_price | is_active | user_id |
++----+-----------------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+|  1 | Rolex           | Rolex | Watch | Shop          | bla bla bla bla bla bla bla bla bla bla bla bla | 14000.25 |      NULL |         1 |       1 |
+|  3 | Casio           | Casio Standart | Watch | Shop | bla bla bla bla bla bla bla bla bla bla bla bla |     2000 |      NULL |         1 |       2 |
+|  4 | Apple iPhone12  | Apple | Phone | Shop          | bla bla bla bla bla bla bla bla bla bla bla bla |     1000 |      NULL |         1 |       2 |
++----+-----------------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+3 rows in set (0,00 sec)
+
+mysql> SELECT * FROM product_images;
++----+------------------------------------------------------------------------------------+---------+------------+
+| id | file                                                                               | alt     | product_id |
++----+------------------------------------------------------------------------------------+---------+------------+
+|  1 | https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg   | Bla bla |          1 |
+|  2 | 11https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg | Bla 1   |          1 |
+|  3 | 2https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg  | Bla 1   |          1 |
++----+------------------------------------------------------------------------------------+---------+------------+
+3 rows in set (0,00 sec)
+
+mysql> INSERT INTO product_images (file, alt, product_id) VALUES ("https://image.flaticon.com/icons/png/512/13/13398.png", "Phone", 4);
+Query OK, 1 row affected (0,02 sec)
+
+mysql> INSERT INTO product_images (file, alt, product_id) VALUES ("https://image.flaticon.com/icons/png/512/619/619997.png", "Watch", 3);
+Query OK, 1 row affected (0,01 sec)
+
+mysql> SELECT * FROM product_images;
++----+------------------------------------------------------------------------------------+---------+------------+
+| id | file                                                                               | alt     | product_id |
++----+------------------------------------------------------------------------------------+---------+------------+
+|  1 | https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg   | Bla bla |          1 |
+|  2 | 11https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg | Bla 1   |          1 |
+|  3 | 2https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg  | Bla 1   |          1 |
+|  4 | https://image.flaticon.com/icons/png/512/13/13398.png                              | Phone   |          4 |
+|  5 | https://image.flaticon.com/icons/png/512/619/619997.png                            | Watch   |          3 |
++----+------------------------------------------------------------------------------------+---------+------------+
+5 rows in set (0,00 sec)
+
+mysql> SHOW COLUMNS FROM categories;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| title       | varchar(255) | NO   |     | NULL    |                |
+| image       | varchar(255) | YES  |     | NULL    |                |
+| meta_title  | char(255)    | YES  |     | NULL    |                |
+| description | varchar(400) | YES  |     | NULL    |                |
+| is_active   | tinyint(1)   | YES  |     | 1       |                |
++-------------+--------------+------+-----+---------+----------------+
+6 rows in set (0,00 sec)
+
+mysql> SELECT * FROM categories;
++----+-------+----------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+
+| id | title | image                                                                            | meta_title   | description                                                                                                                                                                                        | is_active |
++----+-------+----------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+
+|  1 | Watch | https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg | Watch | Shop | bla bla bla bla bla bla bla bla bla bla bla bla bla blabla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla |         1 |
++----+-------+----------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+
+1 row in set (0,01 sec)
+
+mysql> INSERT INTO categories (title, image, meta_title, description) VALUES ("Phone", "https://image.flaticon.com/icons/png/512/13/13398.png","Phone | Shop", "bla bla bla bla bla bla bla bla bla bla bla bla");
+Query OK, 1 row affected (0,02 sec)
+
+mysql> SELECT * FROM categories;
++----+-------+----------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+
+| id | title | image                                                                            | meta_title   | description                                                                                                                                                                                        | is_active |
++----+-------+----------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+
+|  1 | Watch | https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg | Watch | Shop | bla bla bla bla bla bla bla bla bla bla bla bla bla blabla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla |         1 |
+|  2 | Phone | https://image.flaticon.com/icons/png/512/13/13398.png                            | Phone | Shop | bla bla bla bla bla bla bla bla bla bla bla bla                                                                                                                                                    |         1 |
++----+-------+----------------------------------------------------------------------------------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------+
+2 rows in set (0,00 sec)
+
+mysql> SELECT * FROM categories_products;
++----+-------------+------------+
+| id | category_id | product_id |
++----+-------------+------------+
+|  1 |           1 |          1 |
++----+-------------+------------+
+1 row in set (0,20 sec)
+
+mysql> SELECT * FROM products;
++----+-----------------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+| id | title           | meta_title                    | description                                     | price    | old_price | is_active | user_id |
++----+-----------------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+|  1 | Rolex           | Rolex | Watch | Shop          | bla bla bla bla bla bla bla bla bla bla bla bla | 14000.25 |      NULL |         1 |       1 |
+|  3 | Casio           | Casio Standart | Watch | Shop | bla bla bla bla bla bla bla bla bla bla bla bla |     2000 |      NULL |         1 |       2 |
+|  4 | Apple iPhone12  | Apple | Phone | Shop          | bla bla bla bla bla bla bla bla bla bla bla bla |     1000 |      NULL |         1 |       2 |
++----+-----------------+-------------------------------+-------------------------------------------------+----------+-----------+-----------+---------+
+3 rows in set (0,00 sec)
+
+mysql> INSERT INTO categories_products (category_id, product_id) VALUES (1, 3);
+Query OK, 1 row affected (0,06 sec)
+
+mysql> INSERT INTO categories_products (category_id, product_id) VALUES (2, 4);
+Query OK, 1 row affected (0,01 sec)
+
+mysql> SELECT * FROM categories_products;
++----+-------------+------------+
+| id | category_id | product_id |
++----+-------------+------------+
+|  1 |           1 |          1 |
+|  2 |           1 |          3 |
+|  3 |           2 |          4 |
++----+-------------+------------+
+3 rows in set (0,00 sec)
+
+mysql> SELECT users.first_name, users.last_name, pr.title, ctg.title, prim.file FROM users INNER JOIN products as pr ON users.id=pr.user_id INNER JOIN categories_products as ctgp ON ctgp.product_id=pr.id INNER JOIN categories as ctg ON ctg.id=ctgp.category_id INNER JOIN product_images as prim ON prim.product_id=pr.id ORDER BY users.first_name;
++------------+-------------+-----------------+-------+------------------------------------------------------------------------------------+
+| first_name | last_name   | title           | title | file                                                                               |
++------------+-------------+-----------------+-------+------------------------------------------------------------------------------------+
+| Dariia     | Khoroshchuk | Casio           | Watch | https://image.flaticon.com/icons/png/512/619/619997.png                            |
+| Dariia     | Khoroshchuk | Apple iPhone12  | Phone | https://image.flaticon.com/icons/png/512/13/13398.png                              |
+| Liubomyr   | Luzhnyi     | Rolex           | Watch | https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg   |
+| Liubomyr   | Luzhnyi     | Rolex           | Watch | 11https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg |
+| Liubomyr   | Luzhnyi     | Rolex           | Watch | 2https://res.cloudinary.com/hz3gmuqw6/image/upload/v1621495544/cooking_yx2glg.jpg  |
++------------+-------------+-----------------+-------+------------------------------------------------------------------------------------+
+5 rows in set (0,01 sec)
+
+mysql> SELECT users.first_name, users.last_name, pr.title, ctg.title, prim.file FROM users INNER JOIN products as pr ON users.id=pr.user_id INNER JOIN categories_products as ctgp ON ctgp.product_id=pr.id INNER JOIN categories as ctg ON ctg.id=ctgp.category_id INNER JOIN product_images as prim ON prim.product_id=pr.id ORDER BY users.first_name INTO OUTFILE '/var/lib/mysql-files/hw_task3.txt';
+Query OK, 5 rows affected (0,00 sec)
+
+dariia@dariia-VirtualBox:~/Python-Martian-Manhunter-adv-/homeworks/databases$ sudo mysqldump -u root --password=130501 shop_hw > shop_hw.sql
+[sudo] password for dariia:
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
